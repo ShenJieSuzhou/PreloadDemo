@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E5CDF62D2616E19200157D73 /* ImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CDF62C2616E19100157D73 /* ImageModel.swift */; };
+		E5CDF6322616E41C00157D73 /* ProloadTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CDF6312616E41C00157D73 /* ProloadTableViewCell.swift */; };
+		E5CDF6362616E5A200157D73 /* PreloadCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CDF6352616E5A200157D73 /* PreloadCellViewModel.swift */; };
+		E5CDF63B2616FB5D00157D73 /* RobohashClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CDF63A2616FB5C00157D73 /* RobohashClient.swift */; };
 		E5D9E1292609BC010054280A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D9E1282609BC010054280A /* AppDelegate.swift */; };
 		E5D9E12B2609BC010054280A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D9E12A2609BC010054280A /* SceneDelegate.swift */; };
 		E5D9E12D2609BC010054280A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5D9E12C2609BC010054280A /* ViewController.swift */; };
@@ -16,6 +20,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E5CDF62C2616E19100157D73 /* ImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageModel.swift; sourceTree = "<group>"; };
+		E5CDF6312616E41C00157D73 /* ProloadTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProloadTableViewCell.swift; sourceTree = "<group>"; };
+		E5CDF6352616E5A200157D73 /* PreloadCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreloadCellViewModel.swift; sourceTree = "<group>"; };
+		E5CDF63A2616FB5C00157D73 /* RobohashClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobohashClient.swift; sourceTree = "<group>"; };
 		E5D9E1252609BC010054280A /* PreloadDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PreloadDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5D9E1282609BC010054280A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E5D9E12A2609BC010054280A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -37,6 +45,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E5CDF62A2616C3BB00157D73 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E5CDF6352616E5A200157D73 /* PreloadCellViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		E5CDF62B2616C3C500157D73 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E5CDF62C2616E19100157D73 /* ImageModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		E5CDF6302616E3E100157D73 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E5CDF6312616E41C00157D73 /* ProloadTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E5CDF6392616F8E600157D73 /* NetWork */ = {
+			isa = PBXGroup;
+			children = (
+				E5CDF63A2616FB5C00157D73 /* RobohashClient.swift */,
+			);
+			path = NetWork;
+			sourceTree = "<group>";
+		};
 		E5D9E11C2609BC010054280A = {
 			isa = PBXGroup;
 			children = (
@@ -56,6 +96,10 @@
 		E5D9E1272609BC010054280A /* PreloadDemo */ = {
 			isa = PBXGroup;
 			children = (
+				E5CDF6392616F8E600157D73 /* NetWork */,
+				E5CDF6302616E3E100157D73 /* View */,
+				E5CDF62B2616C3C500157D73 /* Model */,
+				E5CDF62A2616C3BB00157D73 /* ViewModel */,
 				E5D9E1282609BC010054280A /* AppDelegate.swift */,
 				E5D9E12A2609BC010054280A /* SceneDelegate.swift */,
 				E5D9E12C2609BC010054280A /* ViewController.swift */,
@@ -137,9 +181,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5CDF63B2616FB5D00157D73 /* RobohashClient.swift in Sources */,
 				E5D9E12D2609BC010054280A /* ViewController.swift in Sources */,
 				E5D9E1292609BC010054280A /* AppDelegate.swift in Sources */,
+				E5CDF6362616E5A200157D73 /* PreloadCellViewModel.swift in Sources */,
 				E5D9E12B2609BC010054280A /* SceneDelegate.swift in Sources */,
+				E5CDF62D2616E19200157D73 /* ImageModel.swift in Sources */,
+				E5CDF6322616E41C00157D73 /* ProloadTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,14 +334,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = WSSN499SLU;
 				INFOPLIST_FILE = PreloadDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.kingdom.PreloadDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.snailgames.PreloadDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = UniversalSnailDev;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -304,14 +355,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = T5646BFYTP;
 				INFOPLIST_FILE = PreloadDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.kingdom.PreloadDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.snailgameusa.aowd;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = aowdDis;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

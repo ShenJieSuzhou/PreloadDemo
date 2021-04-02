@@ -15,6 +15,8 @@ class ViewController: UIViewController {
     fileprivate var currentPage:CGFloat = 0
     fileprivate let itemPerpage: CGFloat = 10
     
+    fileprivate var viewModel: PreloadCellViewModel!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,48 +26,65 @@ class ViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "CellID")
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.prefetchDataSource = self
         
         self.view.addSubview(tableView)
+        
+        // 模拟请求图片
+        let images = (1...200)
+            .map { ImageModel(url: baseURL+"\($0).png",
+                order: $0) }
+//        public var numberOfImage: Int {
+//            return images.count
+//        }
+//
+//        public func loadImage(at index: Int) -> DataLoadOperation? {
+//            if (0..<images.count).contains(index) {
+//                return DataLoadOperation(images[index])
+//            }
+//            return .none
+//        }
     }
 }
 
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 100
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
     }
 }
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1000
+        return viewModel.numberOfImages
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: UITableViewCell  = tableView.dequeueReusableCell(withIdentifier: "CellID", for: indexPath)
-//        cell.backgroundColor = UIColor(red:  CGFloat(arc4random()%256)/256.0, green:  CGFloat(arc4random()%256)/256.0, blue:  CGFloat(arc4random()%256)/256.0, alpha: 1)
-        cell.backgroundColor = .white
-        cell.textLabel?.text = "\(indexPath.row) 行"
-        cell.textLabel?.textColor = .black
-        return cell
-    }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let current = scrollView.contentOffset.y + scrollView.frame.size.height
-        print("current:\(current)")
-        let total = scrollView.contentSize.height
-        print("total:\(total)")
-        let ratio = current / total
-        print("ratio:\(ratio)")
-        let needRead = itemPerpage * (threshold + currentPage)
-        let totalItem = itemPerpage * (currentPage + 1)
-        let newThreshold = needRead / totalItem
-        print("newThreshold:\(newThreshold)")
-        if ratio >= newThreshold {
-            currentPage += 1
-            print("Request page \(currentPage) from server.")
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CellID") as? ProloadTableViewCell else {
+            fatalError("Sorry, could not load cell")
         }
+       
+        cell.updateUI(.none)
+        return cell
     }
 }
 
-//extension ViewController: UIScrollViewDelegate
+extension ViewController: UITableViewDataSourcePrefetching {
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        
+    }
+
+    
+    func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]){
+        
+    }
+}
+
 
