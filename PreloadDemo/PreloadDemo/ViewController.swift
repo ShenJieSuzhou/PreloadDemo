@@ -23,27 +23,26 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
     
         tableView = UITableView(frame: UIScreen.main.bounds, style: .plain)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "CellID")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "PreloadCellID")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.prefetchDataSource = self
-        
         self.view.addSubview(tableView)
         
         // 模拟请求图片
-        let images = (1...200)
-            .map { ImageModel(url: baseURL+"\($0).png",
-                order: $0) }
-//        public var numberOfImage: Int {
-//            return images.count
-//        }
-//
-//        public func loadImage(at index: Int) -> DataLoadOperation? {
-//            if (0..<images.count).contains(index) {
-//                return DataLoadOperation(images[index])
-//            }
-//            return .none
-//        }
+        viewModel = PreloadCellViewModel()
+        viewModel.delegate = self
+//        viewModel.fetchImages()
+    }
+    
+    func visibleIndexPathsToReload(intersecting indexPaths: [IndexPath]) -> [IndexPath] {
+        let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows ?? []
+        let indexPathsIntersection = Set(indexPathsForVisibleRows).intersection(indexPaths)
+        return Array(indexPathsIntersection)
+    }
+    
+    func isLoadingCell(for indexPath: IndexPath) -> Bool {
+        return indexPath.row >= viewModel.currentCount
     }
 }
 
@@ -63,15 +62,18 @@ extension ViewController: UITableViewDelegate {
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfImages
+        return 30
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CellID") as? ProloadTableViewCell else {
-            fatalError("Sorry, could not load cell")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PreloadCellID", for: indexPath) as! ProloadTableViewCell
+        
+        if isLoadingCell(for: indexPath) {
+            cell.updateUI(.none, orderNo: "\(indexPath.row)")
+        } else {
+            cell.updateUI(.none, orderNo: "\(indexPath.row)")
         }
-       
-        cell.updateUI(.none)
+
         return cell
     }
 }
@@ -87,4 +89,22 @@ extension ViewController: UITableViewDataSourcePrefetching {
     }
 }
 
+extension ViewController: PreloadCellViewModelDelegate {
+    
+    func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
+        guard let newIndexPathsToReload = newIndexPathsToReload else {
+            tableView.tableFooterView = nil
+            tableView.reloadData()
+            return
+        }
+        
+        let indexPathsToReload = self.visibleIndexPathsToReload(intersecting: newIndexPathsToReload)
+        tableView.reloadRows(at: indexPathsToReload, with: .automatic)
+    }
+    
+    func onFetchFailed(with reason: String) {
+        tableView.tableFooterView = nil
+        tableView.reloadData()
+    }
+}
 
