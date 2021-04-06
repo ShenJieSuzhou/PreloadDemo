@@ -22,6 +22,7 @@ class PreloadCellViewModel: NSObject {
     private var isFetchInProcess = false
     private var total = 0
     private var currentPage = 0
+    private var testCount = 0
     
     let client = RobohashClient()
     
@@ -43,25 +44,29 @@ class PreloadCellViewModel: NSObject {
         }
         
         isFetchInProcess = true
-        // 延时 3s 模拟网络环境
-        DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 3) {
-            self.currentPage += 1
-            self.isFetchInProcess = false
-            // 初始化 30个 图片
-            let imagesData = (1...30).map {
-                ImageModel(url: baseURL+"\($0).png", order: $0)
-            }
-            self.images.append(contentsOf: imagesData)
-            self.total = self.images.count
+        // 延时 2s 模拟网络环境
+        print("模拟网络请求")
+        DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 2) {
+            print("网络请求返回")
             DispatchQueue.main.async {
+                self.currentPage += 1
+                self.isFetchInProcess = false
+                // 初始化 30个 图片
+                let imagesData = (1...30).map {
+                    ImageModel(url: baseURL+"\($0).png", order: $0)
+                }
+                self.images.append(contentsOf: imagesData)
+                self.total = self.images.count
+                print("返回数据数量\(self.total)")
                 if self.currentPage > 1 {
-                    let indexPathsToReload = self.calculateIndexPathsToReload(from: [])
+                    let indexPathsToReload = self.calculateIndexPathsToReload(from: imagesData)
                     self.delegate?.onFetchCompleted(with: indexPathsToReload)
                 } else {
-                    self.delegate?.onFetchFailed(with: "")
+                    self.delegate?.onFetchCompleted(with: .none)
                 }
             }
         }
+        print("异步操作")
     }
     
     
