@@ -49,7 +49,7 @@ class ViewController: UIViewController {
     
     func isLoadingCell(for indexPath: IndexPath) -> Bool {
         print("row: \(indexPath.row)")
-        return indexPath.row >= (viewModel.currentCount)
+        return indexPath.row >= (viewModel.currentCount - 1)
     }
 }
 
@@ -69,7 +69,7 @@ extension ViewController: UITableViewDelegate {
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.currentCount
+        return viewModel.totalCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -112,7 +112,8 @@ extension ViewController: PreloadCellViewModelDelegate {
         }
         
         let indexPathsToReload = visibleIndexPathsToReload(intersecting: newIndexPathsToReload)
-        tableView.reloadRows(at: indexPathsToReload, with: .automatic)
+//        tableView.reloadRows(at: indexPathsToReload, with: .automatic)
+        tableView.reloadData()
     }
     
     func onFetchFailed(with reason: String) {
