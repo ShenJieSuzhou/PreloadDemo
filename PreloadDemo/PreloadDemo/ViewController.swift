@@ -81,6 +81,7 @@ extension ViewController: UITableViewDelegate {
             }
         } else {
         // 没找到，为 indexPath 创建一个新的下载线程
+            print("在 \(indexPath.row) 行创建一个新的下载线程")
             if let dataloader = viewModel.loadImage(at: indexPath.row) {
                 dataloader.loadingCompleteHandle = updateCellClosure
                 loadingQueue.addOperation(dataloader)
@@ -92,6 +93,7 @@ extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
         if let dataLoader = loadingOperations[indexPath] {
+            print("在 \(indexPath.row) 行取消下载线程")
             dataLoader.cancel()
             loadingOperations.removeValue(forKey: indexPath)
         }
@@ -107,12 +109,6 @@ extension ViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PreloadCellID") as? ProloadTableViewCell else {
             fatalError("Sorry, could not load cell")
         }
-        
-        //        if isLoadingCell(for: indexPath) {
-        //            cell.updateUI(.none, orderNo: "\(indexPath.row)")
-        //        } else {
-        //            cell.updateUI(.none, orderNo: "\(indexPath.row)")
-        //        }
         
         cell.updateUI(.none, orderNo: "\(indexPath.row)")
         return cell
