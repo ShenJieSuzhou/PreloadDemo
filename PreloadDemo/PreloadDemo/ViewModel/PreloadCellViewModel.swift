@@ -37,6 +37,13 @@ class PreloadCellViewModel: NSObject {
         return images[index]
     }
     
+    public func loadImage(at index: Int) -> DataLoadOperation? {
+        if (0..<images.count).contains(index) {
+            return DataLoadOperation(images[index])
+        }
+        return .none
+    }
+    
     func fetchImages() {
         guard !isFetchInProcess else {
             return
@@ -44,9 +51,9 @@ class PreloadCellViewModel: NSObject {
         
         isFetchInProcess = true
         // 延时 2s 模拟网络环境
-        print("模拟网络请求")
+        print("+++++++++++ 模拟网络请求 +++++++++++")
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 2) {
-            print("网络请求返回")
+            print("+++++++++++ 网络请求返回成功 +++++++++++")
             DispatchQueue.main.async {
                 self.currentPage += 1
                 self.isFetchInProcess = false
@@ -56,7 +63,7 @@ class PreloadCellViewModel: NSObject {
                 }
                 self.images.append(contentsOf: imagesData)
                 self.total = self.images.count
-                print("返回数据数量\(self.total)")
+
                 if self.currentPage > 1 {
                     let indexPathsToReload = self.calculateIndexPathsToReload(from: imagesData)
                     self.delegate?.onFetchCompleted(with: indexPathsToReload)

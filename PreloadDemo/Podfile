@@ -1,0 +1,7 @@
+platform :ios, '10.0'
+use_frameworks!
+
+target 'PreloadDemo' do
+  pod 'Alamofire', '~> 5.2'
+  pod 'Kingfisher', '~> 6.0'
+end

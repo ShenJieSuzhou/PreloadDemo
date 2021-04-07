@@ -9,8 +9,8 @@ import Foundation
 
 struct ImageModel {
     
-    fileprivate var url: URL?
-    fileprivate var order: Int?
+    var url: URL?
+    var order: Int?
     
     init(url: String, order: Int) {
         self.url = URL(string: url)

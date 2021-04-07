@@ -6,15 +6,14 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ViewController: UIViewController {
     
     fileprivate var tableView: UITableView!
     fileprivate var indicatorView: UIActivityIndicatorView!
-    fileprivate var data:[Any]?
-    fileprivate let threshold:CGFloat = 0.7
-    fileprivate var currentPage:CGFloat = 0
-    fileprivate var itemPerpage: Int = 10
+    fileprivate var loadingQueue = OperationQueue()
+    fileprivate var loadingOperations = [IndexPath : DataLoadOperation]()
     
     fileprivate var viewModel: PreloadCellViewModel!
     
@@ -61,10 +60,41 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
+        guard let cell = cell as? ProloadTableViewCell else {
+            return
+        }
+        
+        // 图片下载完毕后更新 cell
+        let updateCellClosure: (UIImage?) -> () = { [unowned self] (image) in
+            cell.updateUI(image, orderNo: "\(indexPath.row)")
+            self.loadingOperations.removeValue(forKey: indexPath)
+        }
+        
+        // 找到之前存在的下载线程
+        if let dataLoader = loadingOperations[indexPath] {
+            if let image = dataLoader.image {
+                // 图片已经下载好，直接更新
+                cell.updateUI(image, orderNo: "\(indexPath.row)")
+            } else {
+                // 图片还未下载好，则为这次下载加上回调，等待图片下载完后更新 cell
+                dataLoader.loadingCompleteHandle = updateCellClosure
+            }
+        } else {
+        // 没找到，为 indexPath 创建一个新的下载线程
+            if let dataloader = viewModel.loadImage(at: indexPath.row) {
+                dataloader.loadingCompleteHandle = updateCellClosure
+                loadingQueue.addOperation(dataloader)
+                loadingOperations[indexPath] = dataloader
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
+        if let dataLoader = loadingOperations[indexPath] {
+            dataLoader.cancel()
+            loadingOperations.removeValue(forKey: indexPath)
+        }
     }
 }
 
