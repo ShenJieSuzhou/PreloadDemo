@@ -22,7 +22,6 @@ class PreloadCellViewModel: NSObject {
     private var isFetchInProcess = false
     private var total = 0
     private var currentPage = 0
-    private var testCount = 0
     
     let client = RobohashClient()
     
@@ -66,7 +65,6 @@ class PreloadCellViewModel: NSObject {
                 }
             }
         }
-        print("异步操作")
     }
     
     

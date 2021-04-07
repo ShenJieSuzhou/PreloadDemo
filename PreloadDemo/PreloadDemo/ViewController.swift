@@ -26,6 +26,8 @@ class ViewController: UIViewController {
         viewModel.delegate = self
        
         tableView = UITableView(frame: UIScreen.main.bounds, style: .plain)
+        tableView.separatorStyle = .singleLine
+        tableView.separatorColor = .white
         tableView.register(ProloadTableViewCell.self, forCellReuseIdentifier: "PreloadCellID")
         tableView.delegate = self
         tableView.dataSource = self
@@ -48,7 +50,6 @@ class ViewController: UIViewController {
     }
     
     func isLoadingCell(for indexPath: IndexPath) -> Bool {
-        print("row: \(indexPath.row)")
         return indexPath.row >= (viewModel.currentCount - 1)
     }
 }
@@ -77,13 +78,13 @@ extension ViewController: UITableViewDataSource {
             fatalError("Sorry, could not load cell")
         }
         
-        cell.updateUI(.none, orderNo: "\(indexPath.row)")        
-//        if isLoadingCell(for: indexPath) {
-//            cell.updateUI(.none, orderNo: "\(indexPath.row)")
-//        } else {
-//            cell.updateUI(.none, orderNo: "\(indexPath.row)")
-//        }
+        //        if isLoadingCell(for: indexPath) {
+        //            cell.updateUI(.none, orderNo: "\(indexPath.row)")
+        //        } else {
+        //            cell.updateUI(.none, orderNo: "\(indexPath.row)")
+        //        }
         
+        cell.updateUI(.none, orderNo: "\(indexPath.row)")
         return cell
     }
 }
@@ -91,7 +92,7 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         if indexPaths.contains(where: isLoadingCell(for:)){
-            print("预加载")
+            indicatorView.startAnimating()
             viewModel.fetchImages()
         }
     }
@@ -105,19 +106,23 @@ extension ViewController: UITableViewDataSourcePrefetching {
 extension ViewController: PreloadCellViewModelDelegate {
     
     func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
-        guard let newIndexPathsToReload = newIndexPathsToReload else {
-            tableView.tableFooterView = nil
-            tableView.reloadData()
-            return
-        }
+//        guard let newIndexPathsToReload = newIndexPathsToReload else {
+//            tableView.tableFooterView = nil
+//            tableView.reloadData()
+//            return
+//        }
         
-        let indexPathsToReload = visibleIndexPathsToReload(intersecting: newIndexPathsToReload)
+//        let indexPathsToReload = visibleIndexPathsToReload(intersecting: newIndexPathsToReload)
 //        tableView.reloadRows(at: indexPathsToReload, with: .automatic)
+//        tableView.tableFooterView = nil
+        
+        indicatorView.stopAnimating()
         tableView.reloadData()
     }
     
     func onFetchFailed(with reason: String) {
-        tableView.tableFooterView = nil
+//        tableView.tableFooterView = nil
+        indicatorView.stopAnimating()
         tableView.reloadData()
     }
 }

@@ -8,14 +8,14 @@
 import UIKit
 
 class ProloadTableViewCell: UITableViewCell {
-//    private var loadingIndicator: UIActivityIndicatorView?
+    private var loadingIndicator: UIActivityIndicatorView?
     private var thumbImageView: UIImageView?
     private var order: UILabel?
     
     override func prepareForReuse() {
         super.prepareForReuse()
         order?.text = ""
-//        thumbImageView?.image = .none
+        thumbImageView?.image = .none
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -25,17 +25,15 @@ class ProloadTableViewCell: UITableViewCell {
         thumbImageView = UIImageView(frame: CGRect(x: (self.frame.size.width - 100)/2, y: 0, width: 100, height: 100))
         self.addSubview(thumbImageView!)
         
-        order = UILabel(frame: CGRect(x: 20, y: 0, width: 30, height: self.frame.size.height))
+        order = UILabel(frame: CGRect(x: 20, y: 0, width: 50, height: self.frame.size.height))
         order?.tintColor = .white
         order?.textAlignment = .center
         order?.textColor = .white
         self.addSubview(order!)
         
-        //        loadingIndicator = UIActivityIndicatorView(frame: self.frame)
-        //        loadingIndicator?.color = .blue
-        //        loadingIndicator?.backgroundColor = .red
-        //        loadingIndicator?.startAnimating()
-        //        self.addSubview(loadingIndicator!)
+        loadingIndicator = UIActivityIndicatorView(frame: self.frame)
+        loadingIndicator?.color = .white
+        self.addSubview(loadingIndicator!)
     }
     
     required init?(coder: NSCoder) {
@@ -47,11 +45,11 @@ class ProloadTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-//    override func setSelected(_ selected: Bool, animated: Bool) {
-//        super.setSelected(selected, animated: animated)
-//
-//        // Configure the view for the selected state
-//    }
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
 
     func updateUI(_ image: UIImage?, orderNo: String){
         DispatchQueue.main.async {
@@ -63,9 +61,9 @@ class ProloadTableViewCell: UITableViewCell {
         if let _image = image {
             thumbImageView?.image = _image
             order?.text = orderNo
-//            loadingIndicator?.stopAnimating()
+            loadingIndicator?.stopAnimating()
         } else {
-//            loadingIndicator?.startAnimating()
+            loadingIndicator?.startAnimating()
             order?.text = orderNo
             thumbImageView?.image = .none
         }
