@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="jbU-Kc-wAv">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Load All-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Prefetch" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ek7-Gp-HCs">
+                                <rect key="frame" x="0.0" y="20" width="375" height="598"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="bg7-JR-n81">
+                                <rect key="frame" x="177.5" y="309" width="20" height="20"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="ek7-Gp-HCs" secondAttribute="bottom" id="9Au-bR-8Le"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ek7-Gp-HCs" secondAttribute="trailing" id="Ccr-tu-Ii2"/>
+                            <constraint firstItem="bg7-JR-n81" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="SOT-xK-XKi"/>
+                            <constraint firstItem="bg7-JR-n81" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Ulb-qJ-CpE"/>
+                            <constraint firstItem="ek7-Gp-HCs" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ZtC-iu-lyr"/>
+                            <constraint firstItem="ek7-Gp-HCs" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="ds5-J5-Ibl"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Load All" image="row" id="ooG-jJ-DsE"/>
+                    <connections>
+                        <outlet property="loadingActivityIndicator" destination="bg7-JR-n81" id="YCn-3I-yg3"/>
+                        <outlet property="postTableView" destination="ek7-Gp-HCs" id="gSP-Pl-mog"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1054" y="6"/>
+        </scene>
+        <!--Batch-->
+        <scene sceneID="vd6-Uh-LfQ">
+            <objects>
+                <viewController id="Iuc-PM-bCJ" customClass="BatchViewController" customModule="Prefetch" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="mvS-5B-FtQ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="OtT-9J-KRv">
+                                <rect key="frame" x="0.0" y="20" width="375" height="598"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="OtT-9J-KRv" firstAttribute="top" secondItem="Lwj-og-rlu" secondAttribute="top" id="0YV-Hp-o4W"/>
+                            <constraint firstItem="Lwj-og-rlu" firstAttribute="trailing" secondItem="OtT-9J-KRv" secondAttribute="trailing" id="D55-gT-Lc6"/>
+                            <constraint firstItem="OtT-9J-KRv" firstAttribute="leading" secondItem="Lwj-og-rlu" secondAttribute="leading" id="MXM-DU-h1o"/>
+                            <constraint firstItem="Lwj-og-rlu" firstAttribute="bottom" secondItem="OtT-9J-KRv" secondAttribute="bottom" id="NZx-7b-fXD"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Lwj-og-rlu"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Batch" image="row" id="EKE-zY-kHN"/>
+                    <connections>
+                        <outlet property="coinTableView" destination="OtT-9J-KRv" id="E5Y-C5-YYB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ssn-QM-Lq8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1841" y="6"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="IGt-ps-pML">
+            <objects>
+                <tabBarController id="jbU-Kc-wAv" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="NhD-J3-4pK">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="O87-gB-wbr"/>
+                        <segue destination="Iuc-PM-bCJ" kind="relationship" relationship="viewControllers" id="4k3-Mg-9LR"/>
+                        <segue destination="KRa-PF-Qqj" kind="relationship" relationship="viewControllers" id="Cms-4N-T4w"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ujt-nB-VW9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1841" y="-960"/>
+        </scene>
+        <!--Prefetch-->
+        <scene sceneID="h2a-Fs-9uS">
+            <objects>
+                <viewController id="KRa-PF-Qqj" customClass="PrefetchViewController" customModule="Prefetch" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="kVd-5h-bkm">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NNw-DB-WWN">
+                                <rect key="frame" x="0.0" y="20" width="375" height="598"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="xls-Ug-s29" firstAttribute="trailing" secondItem="NNw-DB-WWN" secondAttribute="trailing" id="T97-iT-PgS"/>
+                            <constraint firstItem="NNw-DB-WWN" firstAttribute="top" secondItem="xls-Ug-s29" secondAttribute="top" id="Yh1-oQ-m3e"/>
+                            <constraint firstItem="NNw-DB-WWN" firstAttribute="leading" secondItem="xls-Ug-s29" secondAttribute="leading" id="gw1-qD-YGh"/>
+                            <constraint firstItem="xls-Ug-s29" firstAttribute="bottom" secondItem="NNw-DB-WWN" secondAttribute="bottom" id="ijG-Z8-PgZ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="xls-Ug-s29"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Prefetch" image="row" id="xCL-Se-iVj"/>
+                    <connections>
+                        <outlet property="newsTableView" destination="NNw-DB-WWN" id="sdO-uS-L4P"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9u1-ar-wc5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2610" y="6"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="row" width="16" height="16"/>
+    </resources>
+</document>
