@@ -16,6 +16,9 @@ protocol PreloadCellViewModelDelegate: NSObject {
 }
 
 class PreloadCellViewModel: NSObject {
+    var loadingQueue = OperationQueue()
+    var loadingOperations = [IndexPath : DataLoadOperation]()
+    
     weak var delegate: PreloadCellViewModelDelegate?
     
     private var images: [ImageModel] = []
@@ -51,9 +54,9 @@ class PreloadCellViewModel: NSObject {
         
         isFetchInProcess = true
         // 延时 2s 模拟网络环境
-        print("+++++++++++ 模拟网络请求 +++++++++++")
+        print("+++++++++++ 模拟网络数据请求 +++++++++++")
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + 2) {
-            print("+++++++++++ 网络请求返回成功 +++++++++++")
+            print("+++++++++++ 模拟网络数据请求返回成功 +++++++++++")
             DispatchQueue.main.async {
                 self.currentPage += 1
                 self.isFetchInProcess = false
@@ -77,7 +80,6 @@ class PreloadCellViewModel: NSObject {
     
     // 计算可视 indexPath 数组
     private func calculateIndexPathsToReload(from newImages: [ImageModel]) -> [IndexPath] {
-        
         let startIndex = images.count - newImages.count
         let endIndex = startIndex + newImages.count
         

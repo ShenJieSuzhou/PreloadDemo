@@ -12,12 +12,8 @@ class ViewController: UIViewController {
     
     fileprivate var tableView: UITableView!
     fileprivate var indicatorView: UIActivityIndicatorView!
-    fileprivate var loadingQueue = OperationQueue()
-    fileprivate var loadingOperations = [IndexPath : DataLoadOperation]()
-    
     fileprivate var viewModel: PreloadCellViewModel!
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -54,12 +50,13 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
+        // preheat image ，处理将要显示的图像
         guard let cell = cell as? ProloadTableViewCell else {
             return
         }
@@ -67,35 +64,38 @@ extension ViewController: UITableViewDelegate {
         // 图片下载完毕后更新 cell
         let updateCellClosure: (UIImage?) -> () = { [unowned self] (image) in
             cell.updateUI(image, orderNo: "\(indexPath.row)")
-            self.loadingOperations.removeValue(forKey: indexPath)
+            viewModel.loadingOperations.removeValue(forKey: indexPath)
         }
         
-        // 找到之前存在的下载线程
-        if let dataLoader = loadingOperations[indexPath] {
+        // 1. 首先判断是否已经存在创建好的下载线程
+        if let dataLoader = viewModel.loadingOperations[indexPath] {
             if let image = dataLoader.image {
-                // 图片已经下载好，直接更新
+                // 1.1 若图片已经下载好，直接更新
                 cell.updateUI(image, orderNo: "\(indexPath.row)")
             } else {
-                // 图片还未下载好，则为这次下载加上回调，等待图片下载完后更新 cell
+                // 1.2 若图片还未下载好，则等待图片下载完后更新 cell
                 dataLoader.loadingCompleteHandle = updateCellClosure
             }
         } else {
-        // 没找到，为 indexPath 创建一个新的下载线程
-            print("在 \(indexPath.row) 行创建一个新的下载线程")
+            // 2. 没找到，则为指定的 url 创建一个新的下载线程
+            print("在 \(indexPath.row) 行创建一个新的图片下载线程")
             if let dataloader = viewModel.loadImage(at: indexPath.row) {
+                // 2.1 添加图片下载完毕后的回调
                 dataloader.loadingCompleteHandle = updateCellClosure
-                loadingQueue.addOperation(dataloader)
-                loadingOperations[indexPath] = dataloader
+                // 2.2 启动下载
+                viewModel.loadingQueue.addOperation(dataloader)
+                // 2.3 将该下载线程加入到记录数组中以便根据索引查找
+                viewModel.loadingOperations[indexPath] = dataloader
             }
         }
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
-        if let dataLoader = loadingOperations[indexPath] {
+        // 在不需要显示的时候，取消下载，避免造成资源浪费
+        if let dataLoader = viewModel.loadingOperations[indexPath] {
             print("在 \(indexPath.row) 行取消下载线程")
             dataLoader.cancel()
-            loadingOperations.removeValue(forKey: indexPath)
+            viewModel.loadingOperations.removeValue(forKey: indexPath)
         }
     }
 }
@@ -116,6 +116,7 @@ extension ViewController: UITableViewDataSource {
 }
 
 extension ViewController: UITableViewDataSourcePrefetching {
+    // 翻页请求
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         if indexPaths.contains(where: isLoadingCell(for:)){
             indicatorView.startAnimating()
@@ -125,7 +126,7 @@ extension ViewController: UITableViewDataSourcePrefetching {
 
     
     func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]){
-        
+
     }
 }
 
