@@ -57,11 +57,50 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         // preheat image ，处理将要显示的图像
-        guard let cell = cell as? ProloadTableViewCell else {
-            return
+//        guard let cell = cell as? ProloadTableViewCell else {
+//            return
+//        }
+//
+//        // 图片下载完毕后更新 cell
+//        let updateCellClosure: (UIImage?) -> () = { [unowned self] (image) in
+//            cell.updateUI(image, orderNo: "\(indexPath.row)")
+//            viewModel.loadingOperations.removeValue(forKey: indexPath)
+//        }
+//
+//        // 1. 首先判断是否已经存在创建好的下载线程
+//        if let dataLoader = viewModel.loadingOperations[indexPath] {
+//            if let image = dataLoader.image {
+//                // 1.1 若图片已经下载好，直接更新
+//                cell.updateUI(image, orderNo: "\(indexPath.row)")
+//            } else {
+//                // 1.2 若图片还未下载好，则等待图片下载完后更新 cell
+//                dataLoader.loadingCompleteHandle = updateCellClosure
+//            }
+//        } else {
+//            // 2. 没找到，则为指定的 url 创建一个新的下载线程
+//            print("在 \(indexPath.row) 行创建一个新的图片下载线程")
+//            if let dataloader = viewModel.loadImage(at: indexPath.row) {
+//                // 2.1 添加图片下载完毕后的回调
+//                dataloader.loadingCompleteHandle = updateCellClosure
+//                // 2.2 启动下载
+//                viewModel.loadingQueue.addOperation(dataloader)
+//                // 2.3 将该下载线程加入到记录数组中以便根据索引查找
+//                viewModel.loadingOperations[indexPath] = dataloader
+//            }
+//        }
+    }
+}
+
+extension ViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.totalCount
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PreloadCellID") as? ProloadTableViewCell else {
+            fatalError("Sorry, could not load cell")
         }
         
-        // 图片下载完毕后更新 cell
         let updateCellClosure: (UIImage?) -> () = { [unowned self] (image) in
             cell.updateUI(image, orderNo: "\(indexPath.row)")
             viewModel.loadingOperations.removeValue(forKey: indexPath)
@@ -88,29 +127,9 @@ extension ViewController: UITableViewDelegate {
                 viewModel.loadingOperations[indexPath] = dataloader
             }
         }
-    }
-    
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        // 在不需要显示的时候，取消下载，避免造成资源浪费
-        if let dataLoader = viewModel.loadingOperations[indexPath] {
-            print("在 \(indexPath.row) 行取消下载线程")
-            dataLoader.cancel()
-            viewModel.loadingOperations.removeValue(forKey: indexPath)
-        }
-    }
-}
-
-extension ViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.totalCount
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PreloadCellID") as? ProloadTableViewCell else {
-            fatalError("Sorry, could not load cell")
-        }
         
-        cell.updateUI(.none, orderNo: "\(indexPath.row)")
+        
+//        cell.updateUI(.none, orderNo: "\(indexPath.row)")
         return cell
     }
 }
@@ -126,7 +145,15 @@ extension ViewController: UITableViewDataSourcePrefetching {
 
     
     func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]){
-
+        // 在不需要显示的时候，取消下载，避免造成资源浪费
+        print("cancelPrefetchingForRowsAt \(indexPaths)")
+        indexPaths.forEach {
+            if let dataLoader = viewModel.loadingOperations[$0] {
+                print("在 \($0.row) 行取消下载线程")
+                dataLoader.cancel()
+                viewModel.loadingOperations.removeValue(forKey: $0)
+            }
+        }
     }
 }
 
