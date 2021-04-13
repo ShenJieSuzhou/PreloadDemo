@@ -45,7 +45,7 @@ class ViewController: UIViewController {
     }
     
     func isLoadingCell(for indexPath: IndexPath) -> Bool {
-        return indexPath.row >= (viewModel.currentCount - 1)
+        return indexPath.row >= (viewModel.currentCount - 5)
     }
 }
 
@@ -92,11 +92,6 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         // If there's a data loader for this index path we don't need it any more. Cancel and dispose
-//        if let dataLoader = loadingOperations[indexPath] {
-//            dataLoader.cancel()
-//            loadingOperations.removeValue(forKey: indexPath)
-//        }
-        
         if let dataLoader = viewModel.loadingOperations[indexPath] {
             print("在 \(indexPath.row) 行取消下载线程")
             dataLoader.cancel()
@@ -115,7 +110,6 @@ extension ViewController: UITableViewDataSource {
             fatalError("Sorry, could not load cell")
         }
         
-        cell.updateUI(.none, orderNo: "\(indexPath.row)")
         return cell
     }
 }
@@ -123,19 +117,37 @@ extension ViewController: UITableViewDataSource {
 extension ViewController: UITableViewDataSourcePrefetching {
     // 翻页请求
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        if indexPaths.contains(where: isLoadingCell(for:)){
-            indicatorView.startAnimating()
-            viewModel.fetchImages()
+        for indexPath in indexPaths {
+            if isLoadingCell(for: indexPath) {
+                indicatorView.startAnimating()
+                viewModel.fetchImages()
+            }
+            print("在 \(indexPath.row) 行 prefetch ")
+            if let _ = viewModel.loadingOperations[indexPath] {
+                return
+            }
+            
+            if let dataloader = viewModel.loadImage(at: indexPath.row) {
+                // 2.1 添加图片下载完毕后的回调
+//                dataloader.loadingCompleteHandle = updateCellClosure
+                // 2.2 启动下载
+                viewModel.loadingQueue.addOperation(dataloader)
+                // 2.3 将该下载线程加入到记录数组中以便根据索引查找
+                viewModel.loadingOperations[indexPath] = dataloader
+            }
         }
+//        if indexPaths.contains(where: isLoadingCell(for:)){
+//indicatorView.startAnimating()
+//        viewModel.fetchImages()
+//        }
     }
 
     
     func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]){
         // 在不需要显示的时候，取消下载，避免造成资源浪费
-        print("cancelPrefetchingForRowsAt \(indexPaths)")
         indexPaths.forEach {
             if let dataLoader = viewModel.loadingOperations[$0] {
-                print("在 \($0.row) 行取消下载线程")
+                print("在 \($0.row) 行 cancelPrefetchingForRowsAt ")
                 dataLoader.cancel()
                 viewModel.loadingOperations.removeValue(forKey: $0)
             }
