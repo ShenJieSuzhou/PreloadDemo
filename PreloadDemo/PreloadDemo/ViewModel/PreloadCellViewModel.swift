@@ -11,7 +11,8 @@ import Foundation
 let baseURL = "https://robohash.org/"
 
 protocol PreloadCellViewModelDelegate: NSObject {
-    func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?)
+    func onFetchCompleted()
+    func onFetchToNewIndexCompleted(with newIndexPathsToReload: [IndexPath]?)
     func onFetchFailed(with reason: String)
 }
 
@@ -68,10 +69,9 @@ class PreloadCellViewModel: NSObject {
                 self.total = self.images.count
 
                 if self.currentPage > 1 {
-                    let indexPathsToReload = self.calculateIndexPathsToReload(from: imagesData)
-                    self.delegate?.onFetchCompleted(with: indexPathsToReload)
+                    self.delegate?.onFetchCompleted()
                 } else {
-                    self.delegate?.onFetchCompleted(with: .none)
+                    self.delegate?.onFetchCompleted()
                 }
             }
         }

@@ -92,11 +92,7 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         // If there's a data loader for this index path we don't need it any more. Cancel and dispose
-        if let dataLoader = viewModel.loadingOperations[indexPath] {
-            print("在 \(indexPath.row) 行取消下载线程")
-            dataLoader.cancel()
-            viewModel.loadingOperations.removeValue(forKey: indexPath)
-        }
+        
     }
 }
 
@@ -119,32 +115,28 @@ extension ViewController: UITableViewDataSourcePrefetching {
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         for indexPath in indexPaths {
             if isLoadingCell(for: indexPath) {
+                // 1.满足条件进行翻页请求
                 indicatorView.startAnimating()
                 viewModel.fetchImages()
             }
-            print("在 \(indexPath.row) 行 prefetch ")
+            
             if let _ = viewModel.loadingOperations[indexPath] {
                 return
             }
             
             if let dataloader = viewModel.loadImage(at: indexPath.row) {
-                // 2.1 添加图片下载完毕后的回调
-//                dataloader.loadingCompleteHandle = updateCellClosure
-                // 2.2 启动下载
+                print("在 \(indexPath.row) 行 对图片进行 prefetch ")
+                // 2 对需要下载的图片进行预热
                 viewModel.loadingQueue.addOperation(dataloader)
-                // 2.3 将该下载线程加入到记录数组中以便根据索引查找
+                // 3 将该下载线程加入到记录数组中以便根据索引查找
                 viewModel.loadingOperations[indexPath] = dataloader
             }
         }
-//        if indexPaths.contains(where: isLoadingCell(for:)){
-//indicatorView.startAnimating()
-//        viewModel.fetchImages()
-//        }
     }
 
     
     func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]){
-        // 在不需要显示的时候，取消下载，避免造成资源浪费
+        // 该行在不需要显示的时候，取消 prefetch ，避免造成资源浪费
         indexPaths.forEach {
             if let dataLoader = viewModel.loadingOperations[$0] {
                 print("在 \($0.row) 行 cancelPrefetchingForRowsAt ")
@@ -157,23 +149,24 @@ extension ViewController: UITableViewDataSourcePrefetching {
 
 extension ViewController: PreloadCellViewModelDelegate {
     
-    func onFetchCompleted(with newIndexPathsToReload: [IndexPath]?) {
-//        guard let newIndexPathsToReload = newIndexPathsToReload else {
-//            tableView.tableFooterView = nil
-//            tableView.reloadData()
-//            return
-//        }
-        
-//        let indexPathsToReload = visibleIndexPathsToReload(intersecting: newIndexPathsToReload)
-//        tableView.reloadRows(at: indexPathsToReload, with: .automatic)
-//        tableView.tableFooterView = nil
-        
+    func onFetchCompleted() {
         indicatorView.stopAnimating()
         tableView.reloadData()
     }
     
+    func onFetchToNewIndexCompleted(with newIndexPathsToReload: [IndexPath]?) {
+        guard let newIndexPathsToReload = newIndexPathsToReload else {
+            tableView.tableFooterView = nil
+            tableView.reloadData()
+            return
+        }
+        
+        let indexPathsToReload = visibleIndexPathsToReload(intersecting: newIndexPathsToReload)
+        tableView.reloadRows(at: indexPathsToReload, with: .automatic)
+        tableView.tableFooterView = nil
+    }
+    
     func onFetchFailed(with reason: String) {
-//        tableView.tableFooterView = nil
         indicatorView.stopAnimating()
         tableView.reloadData()
     }
