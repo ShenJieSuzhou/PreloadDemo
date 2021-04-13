@@ -9,11 +9,11 @@ import Foundation
 
 struct ImageModel {
     
-    var url: URL?
+    var url: NSURL?
     var order: Int?
     
     init(url: String, order: Int) {
-        self.url = URL(string: url)
+        self.url = NSURL(string: url)
         self.order = order
     }
     
