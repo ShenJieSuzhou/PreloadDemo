@@ -26,8 +26,6 @@ class PreloadCellViewModel: NSObject {
     private var total = 0
     private var currentPage = 0
     
-    let client = RobohashClient()
-    
     var totalCount: Int {
         return total
     }
