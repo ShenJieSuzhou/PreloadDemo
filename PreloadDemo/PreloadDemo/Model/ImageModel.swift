@@ -8,7 +8,6 @@
 import Foundation
 
 struct ImageModel {
-    
     var url: URL?
     var order: Int?
     
@@ -16,5 +15,4 @@ struct ImageModel {
         self.url = URL(string: url)
         self.order = order
     }
-    
 }

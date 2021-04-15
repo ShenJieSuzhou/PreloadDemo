@@ -14,6 +14,7 @@ class ProloadTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        // 避免 cell 重用导致数据重叠
         order?.text = ""
         thumbImageView?.image = .none
     }
